@@ -13,6 +13,7 @@
  * published by the Free Software Foundation.
  */
 
+#include <linux/module.h>
 #include <linux/string.h>
 #include <linux/gpio.h>
 #include <mt-plat/mt_gpio.h>
@@ -36,7 +37,7 @@
 /* ------------------------------------------------------------------------- */
 /* Local Variables */
 /* ------------------------------------------------------------------------- */
-static LCM_UTIL_FUNCS lcm_util = { 0 };
+static struct LCM_UTIL_FUNCS lcm_util = { 0 };
 
 
 #define UDELAY(n)		(lcm_util.udelay(n))
@@ -56,7 +57,7 @@ static LCM_UTIL_FUNCS lcm_util = { 0 };
 #define read_reg_v2(cmd, buffer, buffer_size)            lcm_util.dsi_dcs_read_lcm_reg_v2(cmd, buffer, buffer_size)
 #define dsi_set_cmdq_V3(para_tbl, size, force_update)    lcm_util.dsi_set_cmdq_V3(para_tbl, size, force_update)
 
-extern void DSI_clk_HS_mode(DISP_MODULE_ENUM module, void *cmdq, bool enter);
+extern void DSI_clk_HS_mode(enum DISP_MODULE_ENUM module, void *cmdq, bool enter);
 /* static void lcm_panel_init(void); */
 static int vid = -1;
 
@@ -842,20 +843,20 @@ static void lcm_panel_init(void)
 /* ------------------------------------------------------------------------- */
 /* lcm_set_util_funcs Implementations */
 /* ------------------------------------------------------------------------- */
-static void lcm_set_util_funcs(const LCM_UTIL_FUNCS *util)
+static void lcm_set_util_funcs(const struct LCM_UTIL_FUNCS *util)
 {
 	pr_info("[HX8379c] %s\n", __func__);
-	memcpy(&lcm_util, util, sizeof(LCM_UTIL_FUNCS));
+	memcpy(&lcm_util, util, sizeof(struct LCM_UTIL_FUNCS));
 }
 
 
 /* ------------------------------------------------------------------------- */
 /* lcm_get_params function Implementations */
 /* ------------------------------------------------------------------------- */
-static void lcm_get_params(LCM_PARAMS *params)
+static void lcm_get_params(struct LCM_PARAMS *params)
 {
 	pr_info("[HX8379c] %s\n", __func__);
-	memset(params, 0, sizeof(LCM_PARAMS));
+	memset(params, 0, sizeof(struct LCM_PARAMS));
 
 	params->type = LCM_TYPE_DSI;
 	params->width = FRAME_WIDTH;
@@ -1026,7 +1027,7 @@ static unsigned int lcm_compare_id(void)
 /* ------------------------------------------------------------------------- */
 /* Himax driver structure */
 /* ------------------------------------------------------------------------- */
-LCM_DRIVER hx8379c_wvga_dsi_vdo_lcm_drv = {
+struct LCM_DRIVER hx8379c_wvga_dsi_vdo_lcm_drv = {
 	.name = "hx8379c_dsi_wvga_vdo_rook",
 	.set_util_funcs = lcm_set_util_funcs,
 	.get_params = lcm_get_params,
