@@ -87,30 +87,30 @@
 	/* Virtual sensor thermistor */
 	thermistor@0 {
 		compatible = "amazon,virtual_sensor_thermistor";
-		thermistor,offset = <13000>;
-		thermistor,offset.sign = "minus";
-		thermistor,alpha = <50>;
-		thermistor,weight = <380>;
+		thermal_thermistor,offset = <13000>;
+		thermal_thermistor,offset_invert = <1>;
+		thermal_thermistor,alpha = <50>;
+		thermal_thermistor,weight = <380>;
 		aux_channel_num = <0>;
-		virtual-sensor-id = <0>;
+		select_device = <0>;
 	};
 	thermistor@1 {
 		compatible = "amazon,virtual_sensor_thermistor";
-		thermistor,offset = <63500>;
-		thermistor,offset.sign = "minus";
-		thermistor,alpha = <100>;
-		thermistor,weight = <0>;
+		thermal_thermistor,offset = <63500>;
+		thermal_thermistor,offset_invert = <1>;
+		thermal_thermistor,alpha = <100>;
+		thermal_thermistor,weight = <0>;
 		aux_channel_num = <1>;
-		virtual-sensor-id = <1>;
+		select_device = <1>;
 	};
 	thermistor@2 {
 		compatible = "amazon,virtual_sensor_thermistor";
-		thermistor,offset = <14000>;
-		thermistor,offset.sign = "minus";
-		thermistor,alpha = <50>;
-		thermistor,weight = <250>;
+		thermal_thermistor,offset = <14000>;
+		thermal_thermistor,offset_invert = <1>;
+		thermal_thermistor,alpha = <50>;
+		thermal_thermistor,weight = <250>;
 		aux_channel_num = <2>;
-		virtual-sensor-id = <0>;
+		select_device = <0>;
 	};
 
 	bluetooth_rfkill: bluetooth_rfkill {

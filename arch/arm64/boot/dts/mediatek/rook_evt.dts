@@ -20,12 +20,12 @@
 	/* Virtual sensor thermistor */
 	thermistor@3 {
 		compatible = "amazon,virtual_sensor_thermistor";
-		thermistor,offset = <8800>;
-		thermistor,offset.sign = "minus";
-		thermistor,alpha = <10>;
-		thermistor,weight = <800>;
+		thermal_thermistor,offset = <8800>;
+		thermal_thermistor,offset_invert = <1>;
+		thermal_thermistor,alpha = <10>;
+		thermal_thermistor,weight = <800>;
 		aux_channel_num = <3>;
-		virtual-sensor-id = <1>;
+		select_device = <1>;
 	};
 	keys {
 		compatible = "gpio-keys";
