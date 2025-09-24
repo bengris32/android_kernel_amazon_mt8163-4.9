@@ -322,6 +322,7 @@ extern struct LCM_DRIVER jd9366_wxga_dsi_vdo_kayak_fiti_txd_lcm_drv;
 extern struct LCM_DRIVER jd9366_wxga_dsi_vdo_kayak_fiti_starry_lcm_drv;
 extern struct LCM_DRIVER jd9365d_wxga_dsi_vdo_kayak_fiti_tah_kd_lcm_drv;
 extern struct LCM_DRIVER ili9881c_wxga_dsi_vdo_kayak_ili_kd_hsd_lcm_drv;
+extern struct LCM_DRIVER hx8379c_wvga_dsi_vdo_lcm_drv;
 
 #ifdef BUILD_LK
 extern void mdelay(unsigned long msec);

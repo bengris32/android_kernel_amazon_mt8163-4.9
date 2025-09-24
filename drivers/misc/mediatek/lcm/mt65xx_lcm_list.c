@@ -1150,6 +1150,10 @@ struct LCM_DRIVER *lcm_driver_list[] = {
 	&nt35521_wxga_dsi_vdo_kayak_kd_lcm_drv,
 #endif
 
+#if defined(HX8379C_DSI_WVGA_VDO_ROOK)
+	&hx8379c_wvga_dsi_vdo_lcm_drv,
+#endif
+
 };
 
 unsigned char lcm_name_list[][128] = {
