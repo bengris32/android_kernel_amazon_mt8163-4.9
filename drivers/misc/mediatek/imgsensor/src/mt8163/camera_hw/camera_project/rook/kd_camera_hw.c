@@ -9,7 +9,9 @@
 #include <linux/of.h>
 #include <linux/of_gpio.h>
 #include <asm/atomic.h>
+#if 0
 #include <amz_priv.h>
+#endif
 
 #include "kd_camera_hw.h"
 
@@ -515,6 +517,7 @@ _kdCISModulePowerOn_exit_:
 }
 EXPORT_SYMBOL(kdCISModulePowerOn);
 
+#if 0
 static int cam_gpio = -1;
 int kd_camera_priv_cb(void *data, int value)
 {
@@ -580,3 +583,4 @@ static int __init kd_camera_init(void)
 }
 
 device_initcall(kd_camera_init);
+#endif
