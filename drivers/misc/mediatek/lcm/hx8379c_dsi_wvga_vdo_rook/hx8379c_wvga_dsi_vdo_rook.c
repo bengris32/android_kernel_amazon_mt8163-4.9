@@ -1027,8 +1027,15 @@ static unsigned int lcm_compare_id(void)
 /* ------------------------------------------------------------------------- */
 /* Himax driver structure */
 /* ------------------------------------------------------------------------- */
+static const char* hx8379c_wvga_dsi_vdo_lcm_names[2] = {
+	"hx8379c_dsi_wvga_vdo_rook",
+	"hx8379c_wvga_dsi_vdo",
+};
+
 struct LCM_DRIVER hx8379c_wvga_dsi_vdo_lcm_drv = {
-	.name = "hx8379c_dsi_wvga_vdo_rook",
+	//.name = "hx8379c_dsi_wvga_vdo_rook",
+	.multi_names = hx8379c_wvga_dsi_vdo_lcm_names,
+	.num_multi_names = 2,
 	.set_util_funcs = lcm_set_util_funcs,
 	.get_params = lcm_get_params,
 	.init = lcm_init,

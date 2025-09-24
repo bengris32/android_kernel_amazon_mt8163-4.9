@@ -206,15 +206,26 @@ struct disp_lcm_handle *disp_lcm_probe(char *plcm_name,
 			isLCMInited = false;
 		} else {
 			lcm_drv = lcm_driver_list[0];
-			if (strcmp(lcm_drv->name, plcm_name)) {
+			if (lcm_drv->multi_names != NULL) {
+				int i;
+				for (i = 0; i < lcm_drv->num_multi_names;
+				     i++) {
+					if (!strcmp(lcm_drv->multi_names[i],
+						    plcm_name)) {
+						isLCMFound = true;
+						break;
+					}
+				}
+			} else if (!strcmp(lcm_drv->name, plcm_name)) {
+				isLCMFound = true;
+			}
+			if (!isLCMFound) {
 				DISPERR(
-					"FATAL ERROR!!!LCM Driver defined in kernel is different with LK\n"
+					"FATAL ERROR!!!LCM Driver cannot be found.\n"
 					);
 				return NULL;
 			}
-
 			isLCMInited = true;
-			isLCMFound = true;
 		}
 		lcmindex = 0;
 	} else {
