@@ -269,7 +269,7 @@ void checkPowerBeforClose(int PinIdx, char *mode_name)
 
 
 
-int kdCISModulePowerOn(CAMERA_DUAL_CAMERA_SENSOR_ENUM SensorIdx, char *currSensorName, bool On,
+int kdCISModulePowerOn(enum CAMERA_DUAL_CAMERA_SENSOR_ENUM SensorIdx, char *currSensorName, bool On,
 		       char *mode_name)
 {
 
