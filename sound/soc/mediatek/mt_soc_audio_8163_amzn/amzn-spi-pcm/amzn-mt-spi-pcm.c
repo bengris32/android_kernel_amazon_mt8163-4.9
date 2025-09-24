@@ -63,6 +63,8 @@
 struct amzn_spi_priv {
 	struct workqueue_struct *spi_wq;
 	struct work_struct spi_work;
+	size_t kernel_overruns;
+	size_t fpga_overruns;
 	struct snd_pcm_substream *substream;
 	uint8_t *dma_vaddr;
 	dma_addr_t dma_paddr;
@@ -439,8 +441,6 @@ static void spi_data_read(struct work_struct *work)
 	struct dough_frame *tx_df = 0, *rx_df = 0;
 	void *dst_ptr, *src_ptr;
 	size_t n_bytes, bytes, copied, elapsed_threshold;
-	struct task_struct *kworker_task;
-	struct thread_info *kworker_info;
 	struct sched_param param = { .sched_priority = MAX_RT_PRIO - 2 };
 	int ret = 0, iter_count = 0;
 	uint32_t prev_fpga_ts = 0;
@@ -463,17 +463,7 @@ static void spi_data_read(struct work_struct *work)
 	spi_priv_data->fpga_overruns = 0;
 	spi_priv_data->kernel_overruns = 0;
 	set_run_thread(true);
-	kworker_info = current_thread_info();
-	if (kworker_info == NULL) {
-		pr_err("%s: Failed to get thread info\n", __func__);
-		goto fail;
-	}
-	kworker_task = kworker_info->task;
-	if (kworker_task == NULL) {
-		pr_err("%s: Failed to get current thread\n", __func__);
-		goto fail;
-	}
-	sched_setscheduler(kworker_task, SCHED_FIFO, &param);
+	sched_setscheduler(current, SCHED_FIFO, &param);
 
 	cur_ktime = ktime_get_raw();
 	/* Initialize with the same value */
@@ -745,7 +735,7 @@ static int amzn_asoc_capt_probe(struct snd_soc_platform *platform)
 	error = snd_soc_add_platform_controls(platform, amzn_mt_spi_controls,
 					ARRAY_SIZE(amzn_mt_spi_controls));
 	if (error) {
-		pr_err("%s: failed to add %u controls\n", __func__,
+		pr_err("%s: failed to add %lu controls\n", __func__,
 				ARRAY_SIZE(amzn_mt_spi_controls));
 		return error;
 	}
