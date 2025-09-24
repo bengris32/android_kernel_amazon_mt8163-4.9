@@ -295,6 +295,7 @@
 #define GC0310_SENSOR_ID                        0xa310
 #define GC0313MIPI_YUV_SENSOR_ID                0xD0
 #define GC0312_SENSOR_ID                        0xb310
+#define GC0312MIPI_SENSOR_ID                    0xb310
 /* SP */
 #define SP0A09_SENSOR_ID                        0x0a09
 #define SP2509_SENSOR_ID                        0x2509
@@ -484,6 +485,7 @@
 #define SENSOR_DRVNAME_GC0310_MIPI_YUV          "gc0310_mipi_yuv"
 #define SENSOR_DRVNAME_GC0310_YUV               "gc0310_yuv"
 #define SENSOR_DRVNAME_GC0312_YUV               "gc0312_yuv"
+#define SENSOR_DRVNAME_GC0312_RAW               "gc0312mipiraw"
 #define SENSOR_DRVNAME_GC0313MIPI_YUV           "gc0313_mipi_yuv"
 /* SP */
 #define SENSOR_DRVNAME_SP0A09_MIPI_RAW          "sp0a09mipiraw"
