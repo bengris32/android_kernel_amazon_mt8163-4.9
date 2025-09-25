@@ -94,4 +94,22 @@ config TOUCHSCREEN_FTS
 
 source "drivers/input/touchscreen/mediatek/FT5526/Kconfig"
 
+config TOUCHSCREEN_MTK_GT5668
+        bool "GT5668 for Mediatek package"
+        default n
+        help
+        Say Y here if you have GT5668 touch panel.
+
+        If unsure, say N.
+
+config TOUCHSCREEN_SET_INTERRUPT_TO_INPUT
+        bool "Set Interrupt pin to input manually"
+        depends on ROOK
+        default n
+        help
+        Set to ensure interrupt pin on touch panel is set
+        to input mode using gpio subsystem.
+
+source "drivers/input/touchscreen/mediatek/GT5668/Kconfig"
+
 endif
