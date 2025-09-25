@@ -53,4 +53,8 @@ subdir-ccflags-y += -DOTG_WITHOUT_VBUS_CHECK
 subdir-ccflags-y += -DCONFIG_NO_CHARGER_KPOC
 endif
 
+ifneq (, $(filter $(CONFIG_ARCH_MTK_PROJECT), "rook" "rook"))
+subdir-ccflags-y += -DOTG_WITHOUT_VBUS_CHECK
+endif
+
 obj-$(CONFIG_DUAL_ROLE_USB_INTF) += mtk_dual_role.o
