@@ -20,6 +20,24 @@
 
 /* #define DBG_KREE_MEM */
 
+#ifdef CONFIG_ROOK
+static inline uint32_t tag_cmd_to_no_tag(uint32_t cmd)
+{
+	switch (cmd) {
+	case TZCMD_MEM_SECUREMEM_ALLOC_WITH_TAG:
+		return TZCMD_MEM_SECUREMEM_ALLOC;
+	case TZCMD_MEM_SECURECM_ALLOC_WITH_TAG:
+		return TZCMD_MEM_SECURECM_ALLOC;
+	case TZCMD_MEM_SECUREMEM_ZALLOC_WITH_TAG:
+		return TZCMD_MEM_SECUREMEM_ALLOC;
+	case TZCMD_MEM_SECURECM_ZALLOC_WITH_TAG:
+		return TZCMD_MEM_SECURECM_ALLOC;
+	default:
+		return cmd;
+	}
+}
+#endif
+
 /* notiec: handle type is the same */
 static inline int _allocFunc(uint32_t cmd, KREE_SESSION_HANDLE session,
 				uint32_t *mem_handle, uint32_t alignment,
@@ -48,6 +66,16 @@ static inline int _allocFunc(uint32_t cmd, KREE_SESSION_HANDLE session,
 	case TZCMD_MEM_SECURECM_ALLOC_WITH_TAG:
 	case TZCMD_MEM_SECUREMEM_ZALLOC_WITH_TAG:
 	case TZCMD_MEM_SECURECM_ZALLOC_WITH_TAG:
+#ifdef CONFIG_ROOK
+		/* no support for tags */
+		ret = KREE_TeeServiceCall(session, tag_cmd_to_no_tag(cmd),
+					TZ_ParamTypes3(TZPT_VALUE_INPUT,
+							TZPT_VALUE_INPUT,
+							TZPT_VALUE_OUTPUT),
+					p);
+		handle = p[2].value.a;
+		break;
+#else
 		p[2].mem.buffer = (void *)tag;
 		if (tag == NULL)
 			p[2].mem.size = 0;
@@ -61,7 +89,8 @@ static inline int _allocFunc(uint32_t cmd, KREE_SESSION_HANDLE session,
 					p);
 		handle = p[3].value.a;
 		break;
-	default:
+#endif
+		default:
 		return TZ_RESULT_ERROR_BAD_PARAMETERS;
 	}
 	if (ret != TZ_RESULT_SUCCESS) {
@@ -122,6 +151,40 @@ static inline int _handleOpFunc_1(uint32_t cmd,
 }
 
 
+#ifdef CONFIG_ROOK
+int kree_register_sharedmem(KREE_SESSION_HANDLE session,
+					KREE_SHAREDMEM_HANDLE *mem_handle,
+					void *start, uint32_t size, void *map_p,
+					const char *tag)
+{
+	union MTEEC_PARAM p[4];
+	int ret;
+	(void)tag; /* no support for tags */
+
+	p[0].value.a = (unsigned long)start;
+	p[0].value.b = (unsigned long long)(unsigned long)start >> 32;
+	p[1].value.a = size;
+	p[2].mem.buffer = map_p;
+	if (map_p != NULL)
+		p[2].mem.size = ((*(uint32_t *)map_p)+1)*sizeof(uint32_t);
+	else
+		p[2].mem.size = 0;
+	ret = KREE_TeeServiceCall(session, TZCMD_MEM_SHAREDMEM_REG,
+					TZ_ParamTypes4(TZPT_VALUE_INPUT,
+							TZPT_VALUE_INPUT,
+							TZPT_MEM_INPUT,
+							TZPT_VALUE_OUTPUT),
+					p);
+	if (ret != TZ_RESULT_SUCCESS) {
+		*mem_handle = 0;
+		return ret;
+	}
+
+	*mem_handle = p[3].value.a;
+
+	return TZ_RESULT_SUCCESS;
+}
+#else
 int kree_register_sharedmem(KREE_SESSION_HANDLE session,
 					KREE_SHAREDMEM_HANDLE *mem_handle,
 					void *start, uint32_t size, void *map_p,
@@ -160,6 +223,7 @@ int kree_register_sharedmem(KREE_SESSION_HANDLE session,
 
 	return TZ_RESULT_SUCCESS;
 }
+#endif
 
 int kree_unregister_sharedmem(KREE_SESSION_HANDLE session,
 					KREE_SHAREDMEM_HANDLE mem_handle)
