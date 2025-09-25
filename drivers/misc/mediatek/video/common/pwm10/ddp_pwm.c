@@ -48,7 +48,11 @@
 #include <ddp_drv.h>
 #include <ddp_pwm.h>
 
+#ifdef CONFIG_ROOK
+#define PWM_DEFAULT_DIV_VALUE 0x2
+#else
 #define PWM_DEFAULT_DIV_VALUE 0x0
+#endif
 
 #if defined(CONFIG_MACH_MT6799)
 #define PWM0_CLK_NAMING (DISP_CLK_PWM0)

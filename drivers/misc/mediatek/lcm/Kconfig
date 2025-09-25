@@ -23,3 +23,16 @@ config MTK_LCM_DEVICE_TREE_SUPPORT
 	  Please also turn on MTK_LCM_DEVICE_TREE_SUPPORT in ProjectConfig.mk.
 	  If not define MTK_LCM_DEVICE_TREE_SUPPORT
 	  there will not connect between display driver and LCM devices.
+
+config PANEL_BRIGHTNESS_SCALING
+    bool CONFIG_PANEL_BRIGHTNESS_SCALING
+    default n
+    help
+      Enables brightness scaling on a per panel basis.
+
+config PANEL_BRIGHTNESS_SCALING_DEBUG
+    depends on PANEL_BRIGHTNESS_SCALING
+    bool CONFIG_PANEL_BRIGHTNESS_SCALING_DEBUG
+    default n
+    help
+      Adds device files to debug brightness scaling
