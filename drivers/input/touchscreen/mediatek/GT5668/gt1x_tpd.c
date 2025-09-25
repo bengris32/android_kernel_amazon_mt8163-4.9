@@ -32,7 +32,7 @@
 #endif
 #include <linux/suspend.h>
 #if defined(CONFIG_ROOK) && defined(CONFIG_MTK_KERNEL_POWER_OFF_CHARGING)
-#include <mt_boot_common.h>
+#include <mtk_boot_common.h>
 #endif
 
 #if defined(GTP_HAVE_TOUCH_KEY) && defined(CONFIG_TPD_HAVE_BUTTON)
@@ -703,7 +703,7 @@ static int tpd_event_handler(void *unused)
 	u8 end_cmd = 0;
 	s32 ret = 0;
 	u8 point_data[11] = { 0 };
-	struct sched_param param = {.sched_priority = RTPM_PRIO_TPD };
+	struct sched_param param = {.sched_priority = 4 };
 
 	sched_setscheduler(current, SCHED_RR, &param);
 	do {

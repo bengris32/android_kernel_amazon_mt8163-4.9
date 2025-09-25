@@ -22,9 +22,9 @@
 
 #include <asm/uaccess.h>
 #ifdef CONFIG_MTK_BOOT
-#include "mt_boot_common.h"
+#include <mtk_boot_common.h>
 #endif
-#include <linux/rtpm_prio.h>
+//#include <linux/rtpm_prio.h>
 /*//#include <mach/mt_pm_ldo.h>*/
 #include <mt_typedefs.h>
 /*//#include <mach/mt_boot.h>*/
