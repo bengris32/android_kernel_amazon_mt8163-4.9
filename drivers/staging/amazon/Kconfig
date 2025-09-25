@@ -10,4 +10,9 @@ config AMAZON_METRICS_STUB
 
 	  If unsure, say N.
 
+config ROOK
+	bool "Rook MTK platform project"
+	help
+	isolate amazon Rook changes for MTK Platform
+
 endmenu
