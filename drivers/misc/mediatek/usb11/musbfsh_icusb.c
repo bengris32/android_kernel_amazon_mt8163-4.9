@@ -169,9 +169,7 @@ void icusb_power_negotiation(struct usb_device *dev)
 				set_power_negotiation_data[1] =
 				    get_power_negotiation_data[1];
 			}
-			MYDBG("power_negotiation_data[0] : 0x%x ,
-				power_negotiation_data[1] : 0x%x,
-				IC_USB_CURRENT :%d",
+			MYDBG("power_negotiation_data[0] : 0x%x ," "power_negotiation_data[1] : 0x%x," "IC_USB_CURRENT :%d",
 			    set_power_negotiation_data[0],
 			    set_power_negotiation_data[1], IC_USB_CURRENT);
 
@@ -231,8 +229,7 @@ void usb11_wait_disconnect_done(int value)
 			msleep(20);
 		}
 	} else
-		MYDBG("usb11 is not enabled,
-		skip usb11_wait_disconnect_done()\n");
+		MYDBG("usb11 is not enabled," "skip usb11_wait_disconnect_done()\n");
 }
 
 int check_usb11_sts_disconnect_done(void)
@@ -337,8 +334,7 @@ int usb11_session_control(enum SESSION_CONTROL_ACTION action)
 		if (!is_usb11_enabled())
 			mt65xx_usb11_mac_reset_and_phy_stress_set();
 		else
-			MYDBG("usb11 has been enabled, skip
-			mt65xx_usb11_mac_reset_and_phy_stress_set()\n");
+			MYDBG("usb11 has been enabled, skip" "mt65xx_usb11_mac_reset_and_phy_stress_set()\n");
 	} else
 		MYDBG("unknown action\n");
 
