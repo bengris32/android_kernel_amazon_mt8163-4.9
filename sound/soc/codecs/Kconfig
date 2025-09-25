@@ -861,7 +861,7 @@ config SND_SOC_TLV320AIC3101
 	select REGMAP_I2C
 
 config SND_SOC_TLV320AIC32X4
-	tristate
+	tristate "Texas Instruments TLV320AIC32x4 CODECs"
 
 config SND_SOC_TLV320AIC32X4_I2C
 	tristate
