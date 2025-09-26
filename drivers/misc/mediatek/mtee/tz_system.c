@@ -587,6 +587,10 @@ int KREE_CreateSessionWithTag(const char *ta_uuid,
 					KREE_SESSION_HANDLE *pHandle,
 					const char *tag)
 {
+#ifdef CONFIG_ROOK
+	(void)tag; /* no support for tags */
+	return KREE_CreateSession(ta_uuid, pHandle);
+#else
 	uint32_t paramTypes;
 	union MTEEC_PARAM param[4];
 	int ret;
@@ -613,6 +617,7 @@ int KREE_CreateSessionWithTag(const char *ta_uuid,
 		*pHandle = (KREE_SESSION_HANDLE)param[2].value.a;
 
 	return ret;
+#endif
 }
 EXPORT_SYMBOL(KREE_CreateSessionWithTag);
 
