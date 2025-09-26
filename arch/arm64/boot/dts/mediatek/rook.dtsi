@@ -1218,6 +1218,10 @@
 };
 
 &led6 {
+	compatible = "mediatek,lcd-backlight";
+	led_mode = <5>;
+	data = < >;
+	pwm_config = <0 0 0 0 0>;
 	default_brightness = /bits/ 8 <0x80>;
 };
 
