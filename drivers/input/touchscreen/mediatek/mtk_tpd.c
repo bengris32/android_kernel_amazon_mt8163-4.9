@@ -18,6 +18,10 @@
 #include <linux/slab.h>
 #include <linux/uaccess.h>
 #include <linux/fb.h>
+#ifdef CONFIG_TOUCHSCREEN_SET_INTERRUPT_TO_INPUT
+#include <linux/of_gpio.h>
+#include <linux/gpio.h>
+#endif
 #ifdef CONFIG_MTK_MT6306_GPIO_SUPPORT
 #include <mtk_6306_gpio.h>
 #endif
@@ -53,6 +57,10 @@ const struct of_device_id touch_of_match[] = {
 	{ .compatible = "mediatek,touch", },
 	{},
 };
+
+#ifdef CONFIG_TOUCHSCREEN_SET_INTERRUPT_TO_INPUT
+static int interrupt_gpio = -1;
+#endif
 
 void tpd_get_dts_info(void)
 {
@@ -149,8 +157,13 @@ void tpd_gpio_as_int(int pin)
 {
 	mutex_lock(&tpd_set_gpio_mutex);
 	TPD_DEBUG("[tpd]tpd_gpio_as_int\n");
-	if (pin == 1)
+	if (pin == 1) {
 		pinctrl_select_state(pinctrl1, eint_as_int);
+#ifdef CONFIG_TOUCHSCREEN_SET_INTERRUPT_TO_INPUT
+		if (interrupt_gpio >= 0)
+			gpio_direction_input(interrupt_gpio);
+#endif
+	}
 	mutex_unlock(&tpd_set_gpio_mutex);
 }
 
@@ -230,6 +243,21 @@ int tpd_get_gpio_info(struct platform_device *pdev)
 			return ret;
 		}
 	}
+
+#ifdef CONFIG_TOUCHSCREEN_SET_INTERRUPT_TO_INPUT
+	interrupt_gpio = of_get_named_gpio(pdev->dev.of_node, "interrupt-gpio", 0);
+	if (interrupt_gpio < 0) {
+		ret = interrupt_gpio;
+		TPD_DMESG("fwq Cannot find interrupt gpio\n");
+		return ret;
+	}
+
+	ret = gpio_request(interrupt_gpio, "tpd-interrupt");
+	if (ret) {
+		TPD_DMESG("fwq Cannot request tpd interrupt gpio\n");
+		return ret;
+	}
+#endif
 	TPD_DEBUG("[tpd%d] mt_tpd_pinctrl----------\n", pdev->id);
 	return 0;
 }
