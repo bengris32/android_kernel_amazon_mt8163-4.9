@@ -110,12 +110,10 @@
 
 	bluetooth_rfkill: bluetooth_rfkill {
 		compatible = "rfkill-gpio";
-		rfkill-name = "bluetooth";
-		rfkill-type = <2>;
-		shutdown-gpios = <0>, <&pio 28 0>;
-		poweron-delay = <150>;
-		poweroff-delay = <50>;
-		default-state = <1>;
+		label = "bluetooth";
+		radio-type = "bluetooth";
+		shutdown-gpios = <&pio 28 0>;
+		default-blocked;
 	};
 };
 
