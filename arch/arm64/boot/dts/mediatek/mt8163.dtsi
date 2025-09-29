@@ -678,6 +678,7 @@
 					 <GIC_SPI 107 IRQ_TYPE_LEVEL_LOW>,
 					 <GIC_SPI 108 IRQ_TYPE_LEVEL_LOW>,
 					 <GIC_SPI 109 IRQ_TYPE_LEVEL_LOW>;
+			dma-requests = <8>;
 			clocks = <&infracfg CLK_INFRA_AP_DMA>;
 			clock-names = "apdma";
 			#dma-cells = <1>;
