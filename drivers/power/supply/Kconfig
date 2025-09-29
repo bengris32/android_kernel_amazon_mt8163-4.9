@@ -518,6 +518,13 @@ config DUMMY_AC
 	  This enables the Dummy AC driver.
 	  Say Y here to enable support for Dummy AC driver
 
+config DUMMY_BATTERY
+	bool "Dummy battery power supply driver"
+	default n
+	help
+	  This enables the Dummy Battery driver.
+	  Say Y here to enable support for Dummy Battery driver
+
 source "drivers/power/supply/mediatek/battery/Kconfig"
 
 endif # POWER_SUPPLY
