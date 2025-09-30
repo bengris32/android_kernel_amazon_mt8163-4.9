@@ -873,6 +873,10 @@ config SND_SOC_TLV320AIC32X4_SPI
 	depends on SPI_MASTER
 	select SND_SOC_TLV320AIC32X4
 
+config SND_SOC_TLV320AIC32X4_AMZN
+	tristate "Texas Instruments TLV320AIC32x4 CODECs"
+	depends on I2C
+
 config SND_SOC_TLV320AIC3X
 	tristate "Texas Instruments TLV320AIC3x CODECs"
 	depends on I2C
