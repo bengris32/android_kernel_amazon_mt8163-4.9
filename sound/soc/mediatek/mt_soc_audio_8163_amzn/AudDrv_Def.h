@@ -251,6 +251,7 @@
 #define MT_SOC_FM_I2S_PCM  "mt-soc-fm-i2s-pcm"
 #define MT_SOC_FM_I2S_AWB_PCM  "mt-soc-fm-i2s-awb-pcm"
 #define MT_SOC_OFFLOAD_GDMA_PCM "mt-soc-offload-gdma-pcm"
+#define MT_SOC_I2S_TI_PCM "mt-soc-i2s-ti-pcm"
 #define AMZN_MT_SPI_PCM "amzn-mt-spi-pcm"
 
 /* codec dai name */
@@ -325,8 +326,10 @@
 #define MT_SOC_FM_I2S_PLAYBACK_STREAM_NAME "FM_I2S_Playback"
 #define MT_SOC_FM_I2S_CAPTURE_STREAM_NAME "FM_I2S_Capture"
 #define MT_SOC_OFFLOAD_GDMA_STREAM_NAME "OFFLOAD_GDMA_Playback"
+#define MT_SOC_TI_PLAY_STREAM_NAME "TLV320AIC3204 Playback"
 #define MT_SOC_TI_AIC3101_CAPTURE_STREAM_NAME "TLV320AIC3101 Capture"
 #define MT_SOC_RT_PLAYBACK_STREAM_NAME "RT5616_Playback"
+#define MT_SOC_I2S1_PLAYBACK_STREAM_NAME "I2S1_Playback"
 
 #endif
 

@@ -53,6 +53,10 @@ enum audio_system_gpio_type {
 	GPIO_I2S_MCLK,
 	GPIO_MIC_ENABLE,
 	GPIO_MIC_DISABLE,
+	GPIO_DACMUX_HIGH,
+	GPIO_DACMUX_LOW,
+	GPIO_LINEOUT_HIGH,
+	GPIO_LINEOUT_LOW,
 	GPIO_NUM
 };
 
@@ -83,6 +87,10 @@ static struct audio_gpio_attr aud_gpios[GPIO_NUM] = {
 	[GPIO_I2S_MCLK] = {"i2s-mclk", false, NULL},
 	[GPIO_MIC_ENABLE] = {"mic-enable", false, NULL},
 	[GPIO_MIC_DISABLE] = {"mic-disable", false, NULL},
+	[GPIO_DACMUX_HIGH] = {"extamp-dacmux-pullhigh", false, NULL},
+	[GPIO_DACMUX_LOW] = {"extamp-dacmux-pulllow", false, NULL},
+	[GPIO_LINEOUT_HIGH] = {"lineout-off-pullhigh", false, NULL},
+	[GPIO_LINEOUT_LOW] = {"lineout-on-pulllow", false, NULL},
 };
 
 
@@ -408,4 +416,67 @@ int AudDrv_GPIO_MCLK_Select(void)
 	return retval;
 }
 
+int AudDrv_GPIO_DACMUX_Select(int bEnable)
+{
+	int retval = 0;
+
+	if (bEnable == 1) {
+		if (aud_gpios[GPIO_DACMUX_HIGH].gpio_prepare) {
+			retval =
+				pinctrl_select_state(pinctrlaud,
+				aud_gpios[GPIO_DACMUX_HIGH].gpioctrl);
+			if (retval)
+				pr_err("could not set aud_gpios[GPIO_DACMUX_HIGH] pins\n");
+		} else {
+			pr_err("aud_gpios[GPIO_DACMUX_HIGH] pins are not prepared!\n");
+			retval = -1;
+		}
+	} else {
+		if (aud_gpios[GPIO_DACMUX_LOW].gpio_prepare) {
+			retval =
+				pinctrl_select_state(pinctrlaud,
+				aud_gpios[GPIO_DACMUX_LOW].gpioctrl);
+			if (retval)
+				pr_err("could not set aud_gpios[GPIO_DACMUX_LOW] pins\n");
+		} else {
+			pr_err("aud_gpios[GPIO_DACMUX_LOW] pins are not prepared!\n");
+			retval = -1;
+		}
+	}
+    pr_info("%s: Playback_Audio DacMux_bEnable=%d ret=%d\n", __func__, bEnable, retval);
+	return retval;
+}
+
+int AudDrv_GPIO_LineOut_Select(int bEnable)
+{
+	int retval = 0;
+
+	if (bEnable == 1) {
+		/* LineOut switch is enabled when set 0*/
+		if (aud_gpios[GPIO_LINEOUT_LOW].gpio_prepare) {
+			retval =
+				pinctrl_select_state(pinctrlaud,
+				aud_gpios[GPIO_LINEOUT_LOW].gpioctrl);
+			if (retval)
+				pr_err("could not set aud_gpios[GPIO_LINEOUT_LOW] pins\n");
+		} else {
+			pr_err("aud_gpios[GPIO_LINEOUT_LOW] pins are not prepared!\n");
+			retval = -1;
+		}
+	} else {
+		if (aud_gpios[GPIO_LINEOUT_HIGH].gpio_prepare) {
+			retval =
+				pinctrl_select_state(pinctrlaud,
+				aud_gpios[GPIO_LINEOUT_HIGH].gpioctrl);
+			if (retval)
+				pr_err("could not set aud_gpios[GPIO_LINEOUT_HIGH] pins\n");
+		} else {
+			pr_err("aud_gpios[GPIO_LINEOUT_HIGH] pins are not prepared!\n");
+			retval = -1;
+		}
+	}
+
+	pr_info("%s: Playback_Audio Lineout_Enable=%d ret=%d\n", __func__, bEnable, retval);
+	return retval;
+}
 #endif

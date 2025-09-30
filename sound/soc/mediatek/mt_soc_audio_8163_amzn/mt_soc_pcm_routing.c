@@ -79,6 +79,8 @@ static const char * const InterModemPcm_ASRC_Switch[] = { "Off", "On" };
 static const char * const Audio_Debug_Setting[] = { "Off", "On" };
 static const char * const Audio_IPOH_State[] = { "Off", "On" };
 static const char * const Audio_I2S1_Setting[] = { "Off", "On" };
+static const char * const Audio_DacMux_Setting[] = { "Off", "On" };
+static const char * const Audio_LineOut_Setting[] = { "Off", "On" };
 
 
 static bool AudDrvSuspendStatus;
@@ -93,6 +95,8 @@ static int mHplOffset;
 static bool mHprCalibrated;
 static int mHprOffset;
 static bool AudDrvSuspend_ipoh_Status;
+static bool Audio_DacMux_Output;
+static bool Audio_LineOut_Enable;
 
 #define AUXADC_HP_L_CHANNEL 15
 #define AUXADC_HP_R_CHANNEL 14
@@ -502,6 +506,60 @@ static int AudioI2S1_Setting_Get(struct snd_kcontrol *kcontrol,
 	return 0;
 }
 
+static int Audio_DacMux_Set(struct snd_kcontrol *kcontrol,
+		struct snd_ctl_elem_value *ucontrol)
+{
+	pr_debug("%s()\n", __func__);
+
+	if (ucontrol->value.enumerated.item[0] > ARRAY_SIZE(Audio_DacMux_Setting)) {
+		pr_err("%s: DAC Mux Settings Invalid value=%d\n", __func__,
+			ucontrol->value.enumerated.item[0]);
+		return -EINVAL;
+	}
+
+	if (AudDrv_GPIO_DACMUX_Select(ucontrol->value.enumerated.item[0]))
+		return -EINVAL; /* Error already logged */
+
+	Audio_DacMux_Output = ucontrol->value.enumerated.item[0];
+
+	return 0;
+}
+
+static int Audio_DacMux_Get(struct snd_kcontrol *kcontrol,
+		struct snd_ctl_elem_value *ucontrol)
+{
+	pr_debug("%s()\n", __func__);
+	ucontrol->value.enumerated.item[0] = Audio_DacMux_Output;
+	return 0;
+}
+
+static int Audio_LineOut_Set(struct snd_kcontrol *kcontrol,
+		struct snd_ctl_elem_value *ucontrol)
+{
+	pr_debug("%s()\n", __func__);
+
+	if (ucontrol->value.enumerated.item[0] > ARRAY_SIZE(Audio_LineOut_Setting)) {
+		pr_err("%s: Line Out Settings Invalid value=%d\n", __func__,
+			ucontrol->value.enumerated.item[0]);
+		return -EINVAL;
+	}
+
+	if (AudDrv_GPIO_LineOut_Select(ucontrol->value.enumerated.item[0]))
+		return -EINVAL; /* Error already logged */
+
+	Audio_LineOut_Enable = ucontrol->value.enumerated.item[0];
+
+	return 0;
+}
+
+static int Audio_LineOut_Get(struct snd_kcontrol *kcontrol,
+		struct snd_ctl_elem_value *ucontrol)
+{
+	pr_debug("%s()\n", __func__);
+	ucontrol->value.enumerated.item[0] = Audio_LineOut_Enable;
+	return 0;
+}
+
 #if 0
 static int Audio_ModemPcm_ASRC_Set(struct snd_kcontrol *kcontrol,
 				   struct snd_ctl_elem_value *ucontrol)
@@ -774,6 +832,10 @@ static const struct soc_enum Audio_Routing_Enum[] = {
 		 Audio_IPOH_State),
 	SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(Audio_I2S1_Setting),
 		 Audio_I2S1_Setting),
+	SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(Audio_DacMux_Setting),
+		 Audio_DacMux_Setting),
+	SOC_ENUM_SINGLE_EXT(ARRAY_SIZE(Audio_LineOut_Setting),
+		Audio_LineOut_Setting),
 };
 
 static const struct snd_kcontrol_new Audio_snd_routing_controls[] = {
@@ -818,6 +880,12 @@ static const struct snd_kcontrol_new Audio_snd_routing_controls[] = {
 	SOC_ENUM_EXT("Audio_I2S1_Setting", Audio_Routing_Enum[8],
 		 AudioI2S1_Setting_Get,
 		     AudioI2S1_Setting_Set),
+	SOC_ENUM_EXT("Audio_DacMux_Setting", Audio_Routing_Enum[9],
+		 Audio_DacMux_Get,
+			 Audio_DacMux_Set),
+	SOC_ENUM_EXT("Audio_LineOut_Setting", Audio_Routing_Enum[10],
+		 Audio_LineOut_Get,
+			 Audio_LineOut_Set),
 };
 
 

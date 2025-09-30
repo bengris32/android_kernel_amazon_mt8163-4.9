@@ -802,14 +802,14 @@ static int amzn_mt_spi_probe(struct spi_device *spi)
 	size_t bytes;
 	void *fw_buf;
 	/* TODO: Enable it for all products */
-#if defined CONFIG_rbc123 || defined CONFIG_FPGA_POWER_SEQUENCE
+#if defined CONFIG_ROOK || defined CONFIG_rbc123 || defined CONFIG_FPGA_POWER_SEQUENCE
 	struct regulator *reg = NULL;
 	int volt, reg_status_before = 0, reg_status_after;
 #endif
 
 	pr_info("%s\n", __func__);
 
-#if defined CONFIG_rbc123 || defined CONFIG_FPGA_POWER_SEQUENCE
+#if defined CONFIG_ROOK || defined CONFIG_rbc123 || defined CONFIG_FPGA_POWER_SEQUENCE
 	/* VCCIO2 Enabled */
 	reg = devm_regulator_get(&spi->dev, "vcamaf");
 	if (IS_ERR(reg)) {
@@ -830,7 +830,7 @@ static int amzn_mt_spi_probe(struct spi_device *spi)
 	msleep(FPGA_VCC_DELAY_MS);
 
 	/* VCCIO0 Enabled */
-#ifdef CONFIG_rbc123
+#if defined CONFIG_ROOK || defined CONFIG_rbc123
 	reg = devm_regulator_get(&spi->dev, "vgp3");
 #elif defined CONFIG_FPGA_POWER_SEQUENCE
 	reg = devm_regulator_get(&spi->dev, "vcn18");

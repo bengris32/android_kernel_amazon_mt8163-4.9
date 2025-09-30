@@ -414,6 +414,124 @@ static int mt_soc_audio_init(struct snd_soc_pcm_runtime *rtd)
 	return 0;
 }
 
+#ifdef CONFIG_ROOK
+static int mt_soc_audio_init_tlv(struct snd_soc_pcm_runtime *rtd)
+{
+	int ret = 0;
+
+	pr_info("%s\n", __func__);
+#ifndef CONFIG_SND_I2S_MCLK
+	if (rtd == NULL || rtd->codec_dai == NULL) {
+		pr_err("%s: invalid parameters\n", __func__);
+		return -EINVAL;
+	}
+
+	/* Initialize ISP clocks */
+	ret = isp_clk_init();
+	if (ret) {
+		pr_err("%s: isp_clock_initialize Failed. Error = %d\n",
+		__func__, ret);
+		return ret;
+	}
+	/* Enable ISP clocks */
+	ret = isp_clk_enable(1);
+	if (ret) {
+		pr_err("%s: isp_clock_enable Failed. Error = %d\n",
+		__func__, ret);
+		return ret;
+	}
+	/* Turn on MCLK clocks */
+	ret = mclk_enable_reg(1);
+	if (ret) {
+		pr_err("%s: mclk_enable_reg Failed. Error = %d\n",
+		__func__, ret);
+		return ret;
+	}
+	/* Initialize CCF clocks */
+	ret = ccf_clk_init();
+	if (ret) {
+		pr_err("%s: ccf_clk_initialize Failed. Error = %d\n",
+		__func__, ret);
+		return ret;
+	}
+	/* Enable CCF clocks */
+	ret = ccf_clk_enable(1);
+	if (ret) {
+		pr_err("%s: ccf_clk_enable Failed. Error = %d\n",
+		__func__, ret);
+		return ret;
+	}
+	/* Turn on MCLK clocks again */
+	ret = mclk_enable_reg(1);
+	if (ret) {
+		pr_err("%s: mclk_enable_reg Failed. Error = %d\n",
+		__func__, ret);
+		return ret;
+	}
+	/* Setup clock divider */
+	ret = mclk_divider_reg(AIC31XX_FREQ_9600000);
+	if (ret) {
+		pr_err("%s: mclk_cnt_reg Failed. Error = %d\n",
+		__func__, ret);
+		return ret;
+	}
+#else
+	AudDrv_ANA_Clk_On();
+	AudDrv_Clk_On();
+	EnableApll(48000, true);
+	EnableApllTuner(48000, true);
+	SetCLkMclk(Soc_Aud_I2S2, 48000);
+	EnableI2SDivPower(AUDIO_APLL12_DIV2, true);
+
+	Afe_Set_Reg(AFE_I2S_CON2, 1<<12, 1<<12);
+	Afe_Set_Reg(AFE_I2S_CON2, 1, 1);        /* enable I2S2 port */
+	EnableAfe(true);
+#endif
+	return ret;
+}
+
+static int tlv320aic3204_hw_params(struct snd_pcm_substream *substream,
+				struct snd_pcm_hw_params *params)
+{
+	struct snd_soc_pcm_runtime *rtd;
+	struct snd_soc_dai *codec_dai;
+
+	if (substream == NULL) {
+		pr_err("%s: invalid stream parameter\n", __func__);
+		return -EINVAL;
+	}
+
+	rtd = substream->private_data;
+	if (rtd == NULL) {
+		pr_err("%s: invalid runtime parameter\n", __func__);
+		return -EINVAL;
+	}
+
+	codec_dai = rtd->codec_dai;
+	if (codec_dai == NULL) {
+		pr_err("%s: invalid dai parameter\n", __func__);
+		return -EINVAL;
+	}
+
+	/* set codec DAI configuration */
+	if (snd_soc_dai_set_fmt(codec_dai, SND_SOC_DAIFMT_I2S |
+		SND_SOC_DAIFMT_NB_NF | SND_SOC_DAIFMT_CBS_CFS))
+		pr_err("Failed to set fmt for %s\n", codec_dai->name);
+
+	if (snd_soc_dai_set_sysclk(codec_dai, 0, mt_soc_mclk_freq,
+		SND_SOC_CLOCK_OUT))
+		pr_err("%s: Failed to set sysclk for %s\n", __func__,
+		rtd->codec_dai->name);
+
+	return 0;
+}
+
+static struct snd_soc_ops tlv320aic3204_machine_ops = {
+	.startup = mtmachine_startup,
+	.prepare = mtmachine_prepare,
+	.hw_params = tlv320aic3204_hw_params,
+};
+#else
 static int mt_soc_audio_init_rt(struct snd_soc_pcm_runtime *rtd)
 {
 	pr_info("%s\n", __func__);
@@ -493,6 +611,7 @@ static struct snd_soc_ops rt5616_machine_ops = {
 	.prepare = mtmachine_prepare,
 	.hw_params = rt5616_hw_params,
 };
+#endif
 
 static int mt_soc_audio_init2(struct snd_soc_pcm_runtime *rtd)
 {
@@ -1268,6 +1387,30 @@ static struct snd_soc_dai_link mt_soc_dai_common[] = {
 	 .ops = &tlv3101_machine_ops,
 	 .ignore_pmdown_time = 1,
 	},
+#ifdef CONFIG_ROOK
+	{
+	 .name = "TI_DAC_Playback",
+	 .stream_name = MT_SOC_TI_PLAY_STREAM_NAME,
+	 .cpu_dai_name = MT_SOC_DL1DAI_NAME,
+	 .platform_name = MT_SOC_I2S0DL1_PCM,
+	 .codec_dai_name = "tlv320aic32x4-hifi",
+	 .codec_name = "tlv320aic32x4.2-0018",
+	 .init = mt_soc_audio_init_tlv,
+	 .ops = &tlv320aic3204_machine_ops,
+	 .ignore_pmdown_time = 1,
+	},
+	{
+	 .name = "I2S1_Playback",
+	 .stream_name = MT_SOC_I2S1_PLAYBACK_STREAM_NAME,
+	 .cpu_dai_name = MT_SOC_DL1DAI_NAME,
+	 .platform_name = MT_SOC_I2S0DL1_PCM,
+	 .codec_dai_name = MT_SOC_CODEC_DUMMY_DAI_NAME,
+	 .codec_name = MT_SOC_CODEC_DUMMY_NAME,
+	 .init = mt_soc_audio_init,
+	 .ops = &mt_machine_audio_ops,
+	 .ignore_pmdown_time = 1,
+	},
+#else
 	{
 	 .name = "RT5616_Playback",
 	 .stream_name = MT_SOC_RT_PLAYBACK_STREAM_NAME,
@@ -1279,6 +1422,7 @@ static struct snd_soc_dai_link mt_soc_dai_common[] = {
 	 .ops = &rt5616_machine_ops,
 	 .ignore_pmdown_time = 1,
 	},
+#endif
 };
 
 static const char * const I2S_low_jittermode[] = { "Off", "On" };

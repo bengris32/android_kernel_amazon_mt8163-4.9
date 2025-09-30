@@ -57,6 +57,8 @@ int AudDrv_GPIO_HP_SPK_Switch_Select(int bEnable);
 int AudDrv_GPIO_EXTHPAMP_Select(int bEnable);
 int AudDrv_GPIO_MCLK_Select(void);
 int AudDrv_GPIO_MIC_Enable_Select(int bEnable);
+int AudDrv_GPIO_DACMUX_Select(int bEnable);
+int AudDrv_GPIO_LineOut_Select(int bEnable);
 #endif
 
 
