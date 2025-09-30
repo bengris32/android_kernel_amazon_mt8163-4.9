@@ -104,7 +104,11 @@ static bool accdet_check_status(void)
 		return false;
 	}
 
+#ifdef CONFIG_ROOK
+	current_status = gpio_get_value(gpiopin);
+#else
 	current_status = !gpio_get_value(gpiopin);
+#endif
 	mutex_lock(&accdet_eint_irq_sync_mutex);
 	if (current_status != jack_status) {
 		ACCDET_INFO("[accdet]%s- status switch:[%s]->[%s]\n", __func__,
