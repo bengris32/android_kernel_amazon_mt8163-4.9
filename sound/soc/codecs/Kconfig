@@ -864,12 +864,12 @@ config SND_SOC_TLV320AIC32X4
 	tristate "Texas Instruments TLV320AIC32x4 CODECs"
 
 config SND_SOC_TLV320AIC32X4_I2C
-	tristate
+	tristate "I2C interface for Texas Instruments TLV320AIC32x4 CODECs"
 	depends on I2C
 	select SND_SOC_TLV320AIC32X4
 
 config SND_SOC_TLV320AIC32X4_SPI
-	tristate
+	tristate "SPI interface for Texas Instruments TLV320AIC32x4 CODECs"
 	depends on SPI_MASTER
 	select SND_SOC_TLV320AIC32X4
 
