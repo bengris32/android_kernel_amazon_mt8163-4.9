@@ -1154,6 +1154,15 @@ struct LCM_DRIVER *lcm_driver_list[] = {
 	&hx8379c_wvga_dsi_vdo_lcm_drv,
 #endif
 
+#if defined(ST7701S_WSVGA_DSI_VDO_CHECKERS)
+        &st7701s_wsvga_dsi_vdo_checkers_st_kd_ctp_lcm_drv,
+        &st7701s_wsvga_dsi_vdo_checkers_st_inx_lcm_drv,
+        &st7701s_wsvga_dsi_vdo_checkers_st_truly_lcm_drv,
+        &st7701s_wsvga_dsi_vdo_checkers_st_protokd_lcm_drv,
+        &st7701s_wsvga_dsi_vdo_checkers_st_kd_inx_lcm_drv,
+        &st7701s_wsvga_dsi_vdo_checkers_st_kd_hsd_lcm_drv,
+#endif
+
 };
 
 unsigned char lcm_name_list[][128] = {
