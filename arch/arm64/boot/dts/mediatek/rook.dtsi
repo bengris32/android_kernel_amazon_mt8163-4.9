@@ -79,6 +79,14 @@
 		regulator-always-on;
 	};
 
+	/* auxadc thermistor channel */
+	thermal-sensor {
+		compatible = "generic-adc-thermal";
+		#thermal-sensor-cells = <0>;
+		io-channels = <&auxadc 0>, <&auxadc 14>, <&auxadc 15>, <&auxadc 12>;
+		io-channel-names = "sensor-channel";
+	};
+
 	/* Virtual sensor thermistor */
 	thermistor@0 {
 		compatible = "amazon,virtual_sensor_thermistor";
