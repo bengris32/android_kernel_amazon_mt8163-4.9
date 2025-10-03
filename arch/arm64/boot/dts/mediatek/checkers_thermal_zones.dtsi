@@ -1,0 +1,151 @@
+/*
+ * arch/arm64/boot/dts/mediatek/checkers_thermal_zones.dtsi
+ *
+ * Copyright (C) 2019 Amazon, Inc. All rights reserved.
+ *
+ * This program is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 2 of the License, or
+ * (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License for
+ * more details.
+ *
+*/
+
+/ {
+	thermal-zones {
+		skin_virtual {
+			polling-delay = <1000>;
+			polling-delay-passive = <1000>;
+			policy = "step_wise";
+
+			thermal-sensors = <&skin_virtual_sensor>;
+
+			/* svt is short for skin_virtual_thermal */
+			trips {
+				svt_trip: trip-point@0 {
+					temperature = <43000>;
+					hysteresis = <0>;
+					type = "passive";
+				};
+				svt_trip1: trip-point@1 {
+					temperature = <48000>;
+					hysteresis = <2000>;
+					type = "passive";
+				};
+				svt_trip2: trip-point@2 {
+					temperature = <50000>;
+					hysteresis = <1500>;
+					type = "passive";
+				};
+				svt_trip3: trip-point@3 {
+					temperature = <52000>;
+					hysteresis = <1500>;
+					type = "passive";
+				};
+				svt_trip4: trip-point@4 {
+					temperature = <54000>;
+					hysteresis = <1500>;
+					type = "passive";
+				};
+                                svt_trip5: trip-point@5 {
+                                        temperature = <56000>;
+                                        hysteresis = <1500>;
+                                        type = "passive";
+                                };
+                                svt_trip_critical1: trip-point@6 {
+                                        temperature = <58000>;
+                                        hysteresis = <0>;
+                                        type = "critical";
+                                };
+			}; /* trips */
+
+		}; /* skin_virtual */
+
+		case_virtual {
+			polling-delay = <1000>;
+			polling-delay-passive = <1000>;
+			policy = "step_wise";
+
+			thermal-sensors = <&case_virtual_sensor>;
+
+			/* cvt is short for case_virtual_thermal */
+			trips {
+				cvt_trip: trip-point@0 {
+					temperature = <87000>;
+					hysteresis = <0>;
+					type = "passive";
+				};
+				cvt_trip1: trip-point@1 {
+					temperature = <90000>;
+					hysteresis = <2000>;
+					type = "passive";
+				};
+				cvt_trip2: trip-point@2 {
+					temperature = <95000>;
+					hysteresis = <2000>;
+					type = "passive";
+				};
+				cvt_trip3: trip-point@3 {
+					temperature = <97000>;
+					hysteresis = <1500>;
+					type = "passive";
+				};
+                                cvt_trip4: trip-point@4 {
+                                        temperature = <100000>;
+                                        hysteresis = <2000>;
+                                        type = "passive";
+                                };
+                                cvt_trip5: trip-point@5 {
+                                        temperature = <103000>;
+                                        hysteresis = <2500>;
+                                        type = "passive";
+                                };
+                                cvt_trip6: trip-point@6 {
+                                        temperature = <106000>;
+                                        hysteresis = <0>;
+                                        type = "passive";
+                                };
+                                cvt_trip7: trip-point@7 {
+                                        temperature = <108000>;
+                                        hysteresis = <0>;
+                                        type = "passive";
+                                };
+				cvt_trip_critical1: trip-point@8 {
+					temperature = <110000>;
+					hysteresis = <0>;
+					type = "critical";
+				};
+			}; /* trips */
+
+		}; /* case_virtual */
+
+		therm0_s: therm0_s {
+			polling-delay = <0>;
+			polling-delay-passive = <0>;
+			policy = "step_wise";
+
+			thermal-sensors = <&therm0>;
+		}; /* therm0_sensor */
+
+		therm1_s: therm1_s {
+			polling-delay = <0>;
+			polling-delay-passive = <0>;
+			policy = "step_wise";
+
+			thermal-sensors = <&therm1>;
+		}; /* therm1_sensor */
+
+		therm2_s: therm2_s {
+			polling-delay = <0>;
+			polling-delay-passive = <0>;
+			policy = "step_wise";
+
+			thermal-sensors = <&therm2>;
+		}; /* therm2_sensor */
+
+	};
+};
