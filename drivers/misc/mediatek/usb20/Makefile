@@ -57,4 +57,8 @@ ifneq (, $(filter $(CONFIG_ARCH_MTK_PROJECT), "rook" "rook"))
 subdir-ccflags-y += -DOTG_WITHOUT_VBUS_CHECK
 endif
 
+ifneq (, $(filter $(CONFIG_ARCH_MTK_PROJECT), "checkers" "checkers"))
+subdir-ccflags-y += -DOTG_WITHOUT_VBUS_CHECK
+endif
+
 obj-$(CONFIG_DUAL_ROLE_USB_INTF) += mtk_dual_role.o
