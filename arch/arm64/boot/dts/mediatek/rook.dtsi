@@ -76,7 +76,12 @@
 		gpio = <&pio 27 0>;
 		startup-delay-us = <1000>;
 		enable-active-high;
-		regulator-always-on;
+	};
+
+	bcmdhd: bcmdhd_wlan@0 {
+		compatible = "android,bcmdhd_wlan";
+		gpios = <&pio 29 0>;
+		wlreg_on-supply = <&wlreg_on>;
 	};
 
 	/* auxadc thermistor channel */
