@@ -91,6 +91,8 @@ struct mtkts_bts_channel_param {
 #include "inc/mtk_ts_board_abc123.h"
 #elif defined(CONFIG_THERMAL_ROOK)
 #include "inc/mtk_ts_board_rook.h"
+#elif defined(CONFIG_THERMAL_CHECKERS)
+#include "inc/mtk_ts_board_checkers.h"
 #else
 #include "inc/mtk_ts_board_abf123.h"
 #endif
