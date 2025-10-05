@@ -282,9 +282,18 @@ extern int mt_irq_mask_restore(struct mtk_irq_mask *mask);
 /* to replace mt_irq_unmask_for_sleep */
 extern void unmask_irq(struct irq_desc *desc);
 
+#ifdef CONFIG_MTK_SERIAL
+extern int request_uart_to_sleep(void);
+extern int request_uart_to_wakeup(void);
+extern void mtk_uart_restore(void);
+#define mtk8250_request_to_sleep request_uart_to_sleep
+#define mtk8250_request_to_wakeup request_uart_to_wakeup
+#define mtk8250_restore_dev mtk_uart_restore
+#else
 extern int mtk8250_request_to_sleep(void);
 extern int mtk8250_request_to_wakeup(void);
 extern void mtk8250_restore_dev(void);
+#endif
 extern void dump_uart_reg(void);
 
 /**************************************
